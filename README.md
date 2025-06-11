@@ -1,17 +1,10 @@
-# dairlib
-Warning! This is very much "development-level" code and is provided as-is. APIs are likely to be unstable and, while we hope for the documentation to be thorough and accurate, we make no guarantees.
+# dairlib-pl
+This repo contains the code for ``Perceptive Mixed-Integer Footstep Control for Underactuated Bipedal Walking on Rough Terrain'' by [Brian Acosta](https://github.com/Brian-Acosta) and [Michael Posa](https://github/mposa). The code is based on [dairlib](https://github.com/DAIRLab/dairlib). We have separated the perceptive locomotion project into this dedicated fork due to the need for several additional external dependencies compared to a baseline dairlib installation.   
 
-## Current Continuous Integration Status
-* `main` branch build and unit tests (Ubuntu 22.04): [![Build Status](https://api.cirrus-ci.com/github/DAIRLab/dairlib.svg?task=build_jammy&script=test)](https://cirrus-ci.com/github/DAIRLab/dairlib)
-* `main` branch build and unit tests (Ubuntu 20.04): [![Build Status](https://api.cirrus-ci.com/github/DAIRLab/dairlib.svg?task=build_focal&script=test)](https://cirrus-ci.com/github/DAIRLab/dairlib)
-* `main` branch build and unit tests (Ubuntu 20.04 with ROS): [![Build Status](https://api.cirrus-ci.com/github/DAIRLab/dairlib.svg?task=build_with_ros&script=test)](https://cirrus-ci.com/github/DAIRLab/dairlib)
-* Experimental build against Drake's `master` branch: [![Build Status](https://api.cirrus-ci.com/github/DAIRLab/dairlib.svg?task=drake_master_build&script=test)](https://cirrus-ci.com/github/DAIRLab/dairlib)
-## Complete Build Instructions
-
-### Download dairlib
-1. Clone `dairlib` into the your workspace, e.g. "my-workspace/dairlib".
+### Download dairlib-pl
+1. Clone `dairlib-pl` into the your workspace, e.g. "my-workspace/dairlib-pl".
 ```
-git clone https://github.com/DAIRLab/dairlib.git
+git clone https://github.com/perceptive-locomotion/dairlib-pl.git
 ```
 
 2. Download and setup SNOPT
