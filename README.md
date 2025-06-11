@@ -20,7 +20,7 @@ There is no need to extract the tar.
 
 3. Download and setup Gurobi
 
-The mixed-integer footstep controller uses the commercially licensed Gurobi solver. Follow the [drake gurobi instlLtion instructions](https://drake.mit.edu/bazel.html#gurobi-100) to set up gurobi. 
+The mixed-integer footstep controller uses the commercially licensed Gurobi solver. Follow the [drake gurobi installation instructions](https://drake.mit.edu/bazel.html#gurobi-100) to set up gurobi. 
 
 
 
