@@ -1,5 +1,5 @@
 # dairlib-pl
-This repo contains the code for "Perceptive Mixed-Integer Footstep Control for Underactuated Bipedal Walking on Rough Terrain" by [Brian Acosta](https://github.com/Brian-Acosta) and [Michael Posa](https://github/mposa). The code is based on [dairlib](https://github.com/DAIRLab/dairlib). We have separated the perceptive locomotion project into this dedicated fork due to the need for several additional external dependencies compared to a baseline dairlib installation.   
+This repo contains the code for "Perceptive Mixed-Integer Footstep Control for Underactuated Bipedal Walking on Rough Terrain" by [Brian Acosta](https://github.com/Brian-Acosta) and [Michael Posa](https://github.com/mposa). The code is based on [dairlib](https://github.com/DAIRLab/dairlib). We have separated the perceptive locomotion project into this dedicated fork due to the need for several additional external dependencies compared to a baseline dairlib installation.   
 
 ### Download dairlib-pl
 1. Clone `dairlib-pl` into the your workspace, e.g. "my-workspace/dairlib-pl".
