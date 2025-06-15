@@ -1,3 +1,6 @@
+from lcm import EventLog
+
+from pydrake.systems.framework import Diagram
 from pydrake.systems.lcm import _Serializer_
 from pydrake.systems.analysis import Simulator
 from pydrake.common.value import Value
@@ -5,7 +8,12 @@ from pydrake.common.value import Value
 
 class LcmLogPlayback:
 
-    def __init__(self, log, diagram, channel_to_type_map, channel_to_port_map, start_time: float = 0):
+    def __init__(self,
+                 log: EventLog,
+                 diagram: Diagram,
+                 channel_to_type_map: dict,
+                 channel_to_port_map: dict,
+                 start_time: float = 0):
         self._lcm_log = log
         self._diagram = diagram
         self._channel_to_port_map = channel_to_port_map
@@ -18,8 +26,9 @@ class LcmLogPlayback:
             c: False for c in self._channels
         }
         for channel in self._channels:
-            # TODO (@Brian-Acosta) may want to move this elsewhere to support python
-            #  or cpp serializers based on the message type
+            # TODO (@Brian-Acosta) may want to move this elsewhere to support
+            #  using either python or cpp serializers based on the message type
+            #  (curently only supports cpp serializers)
             self._serializers[channel] = _Serializer_[channel_to_type_map[channel]]()
             self._values[channel] = self._serializers[channel].CreateDefaultValue()
         self._start_timestamp = 0

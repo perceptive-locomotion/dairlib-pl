@@ -10,28 +10,27 @@ import dairlib
 
 from pydairlib.common import FindResourceOrThrow
 from pydrake.all import (
-    PiecewisePolynomial,
     Box,
-    RotationMatrix,
-    RigidTransform,
     Meshcat,
-    DiagramBuilder,
-    AddMultibodyPlantSceneGraph,
     Simulator,
     SceneGraph,
+    StartMeshcat,
+    RotationMatrix,
+    RigidTransform,
+    DiagramBuilder,
     MultibodyPlant,
     MeshcatVisualizer,
-    StartMeshcat,
-    MeshcatVisualizerParams
+    PiecewisePolynomial,
+    MeshcatVisualizerParams,
+    AddMultibodyPlantSceneGraph,
 )
 
-import pydairlib.analysis.cassie_plotting_utils as cassie_plots
 import pydairlib.analysis.mbp_plotting_utils as mbp_plots
-from pydairlib.analysis.process_lcm_log import get_log_data
-from pydairlib.multibody import MultiposeVisualizer
+import pydairlib.analysis.cassie_plotting_utils as cassie_plots
 
 from pydairlib.systems import GridMapVisualizer
-from pydairlib.geometry import ConvexPolygonVisualizer
+from pydairlib.multibody import MultiposeVisualizer
+from pydairlib.analysis.process_lcm_log import get_log_data
 from pydairlib.perceptive_locomotion.results import analysis_utils
 
 
@@ -46,8 +45,14 @@ def ground_truth_main():
     default_channels = cassie_plots.cassie_default_channels
 
     robot_output = get_log_data(
-        lcmlog, default_channels, 0, -1, mbp_plots.load_state_channel,  # processing callback
-        plant, channel_x)
+        lcmlog,
+        default_channels,
+        0,
+        -1,
+        mbp_plots.load_state_channel,
+        plant,
+        channel_x
+    )
 
     visualizer = multipose_visualizer_main(robot_output, num_poses, 0.05, 0.5)
     visualizer.AddSteppingStonesFromYaml(filename_stones)
@@ -57,7 +62,9 @@ def ground_truth_main():
 
 def perceptive_main():
     filename_log = sys.argv[1]
-    grid_maps, robot_output = analysis_utils.get_grid_maps_from_log(filename_log)
+    grid_maps, robot_output = analysis_utils.get_grid_maps_from_log(
+        filename_log
+    )
     
     start_fraction = 0.1
     end_fraction = 0.9
@@ -80,7 +87,11 @@ def perceptive_main():
     for i, idx in enumerate(map_idx):
         alpha = min(float(len(map_idx) - i) / len(map_idx) + 0.1, 1.0)
         grid_map_visualizer.SetRgba(0.1, 0.1, 0.9, alpha)
-        grid_map_visualizer.DrawGridMap(grid_maps[idx], ['elevation'], f'{idx}_')
+        grid_map_visualizer.DrawGridMap(
+            grid_maps[idx],
+            ['elevation'],
+            f'{idx}_'
+        )
     
     while True:
         continue
@@ -104,7 +115,8 @@ def look_at(meshcat, point_of_interest, cam_pos_local):
         "/Lights/PointLightNegativeX/<object>", "intensity", 200)
 
 
-def multipose_visualizer_main(robot_output, num_poses, start_fraction, end_fraction):
+def multipose_visualizer_main(robot_output, num_poses, start_fraction,
+                              end_fraction):
 
     n = robot_output['q'].shape[0]
     q_idx = np.linspace(
@@ -123,7 +135,11 @@ def multipose_visualizer_main(robot_output, num_poses, start_fraction, end_fract
         np.square(alpha_scale), ""
     )
     
-    look_at(visualizer.GetMeshcat(), np.array([5.0, 0.0, 0.5]), np.array([0.0, 2.0, 0.5]))
+    look_at(
+        visualizer.GetMeshcat(),
+        np.array([5.0, 0.0, 0.5]),
+        np.array([0.0, 2.0, 0.5])
+    )
     
     visualizer.DrawPoses(poses.T)
     return visualizer

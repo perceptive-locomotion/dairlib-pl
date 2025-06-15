@@ -197,7 +197,6 @@ int DoMain(int argc, char* argv[]) {
       gains.vel_scale_trans_lateral,
       1.0);
 
-
   builder.Connect(*cassie_out_receiver, *cassie_out_to_radio);
   builder.Connect(cassie_out_to_radio->get_output_port(),
                     high_level_command->get_input_port_radio());
@@ -588,7 +587,6 @@ int DoMain(int argc, char* argv[]) {
     return mpc_subscriber->GetInternalMessageCount() > 1; });
   mpc_subscriber->ForcedPublish(loop.get_diagram()->
       GetMutableSubsystemContext(*mpc_subscriber, &loop_context));
-
 
   loop.Simulate();
 

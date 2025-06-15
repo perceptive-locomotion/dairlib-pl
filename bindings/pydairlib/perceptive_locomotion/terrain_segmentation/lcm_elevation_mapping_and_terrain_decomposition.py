@@ -41,7 +41,7 @@ import pydairlib.perceptive_locomotion.terrain_segmentation. \
     segmentation_criteria as seg_criteria
 
 
-points_topic = "CASSIE_DEPTH"
+points_channel = "CASSIE_DEPTH"
 cassie_state_channel = "CASSIE_STATE_DISPATCHER"
 
 elevation_mapping_params = (
@@ -71,7 +71,7 @@ def main():
 
     elevation_mapping = CassieElevationMappingLcmDiagram(
         params_to_use,
-        points_topic
+        points_channel
     )
     plant = elevation_mapping.plant()
     terrain_segmentation = TerrainSegmentationSystem(

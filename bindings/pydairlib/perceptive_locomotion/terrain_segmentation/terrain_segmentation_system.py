@@ -59,26 +59,30 @@ class TerrainSegmentationSystem(LeafSystem):
         self.DeclareForcedUnrestrictedUpdateEvent(
             self.UpdateTerrainSegmentation
         )
-        self.safety_hysteresis = 0.6
-        self.kernel_length = 0.17
-        self.erosion_kernel_length = self.kernel_length / 1.2
-        self.safety_threshold = 0.7
 
         self.safety_criterion_callbacks = safety_callbacks
         self.profiling = profiling
-        self.debug = False
         self.safety_scores = {}
-        self.inpaint_unseen_terrain = True
+
+        # Editable parameters
+        self.kernel_length = 0.17
+        self.safety_threshold = 0.7
+        self.safety_hysteresis = 0.4
+        self.erosion_kernel_length = self.kernel_length / 1.2
+        self.debug = False
         self.opencv_inpaint = True
+        self.inpaint_unseen_terrain = True
 
     def get_raw_safety_score(
-            self, elevation: np.ndarray, denoised_and_inpainted_map: np.ndarray,
+            self, elevation: np.ndarray,
+            denoised_and_inpainted_map: np.ndarray,
             resolution: float) -> np.ndarray:
 
         raw_safety = np.ones_like(denoised_and_inpainted_map)
         kernel = self.get_kernel_size(resolution)
 
         i = 0
+        # calculate and compose all of the safety criteria
         for name, callback in self.safety_criterion_callbacks.items():
             start = time.time()
             raw_safety = raw_safety * callback(
@@ -92,7 +96,11 @@ class TerrainSegmentationSystem(LeafSystem):
                 self.safety_scores[name] = callback(
                     denoised_and_inpainted_map, kernel, resolution)
 
-        raw_safety = np.power(raw_safety, 1./len(self.safety_criterion_callbacks))
+        # geometric mean
+        raw_safety = np.power(
+            raw_safety,
+            1. / len(self.safety_criterion_callbacks)
+        )
         
         if not self.inpaint_unseen_terrain:
             raw_safety[np.isnan(elevation)] = 0
@@ -109,7 +117,8 @@ class TerrainSegmentationSystem(LeafSystem):
 
     def cleanup_and_add_hysteresis(
             self, raw_safety_score: np.ndarray,
-            prev_segmentation: np.ndarray, resolution: float) -> np.ndarray:
+            prev_segmentation: np.ndarray,
+            resolution: float) -> np.ndarray:
         final_safety_score = np.minimum(
             np.ones_like(raw_safety_score),
             raw_safety_score + self.safety_hysteresis * prev_segmentation
@@ -122,7 +131,7 @@ class TerrainSegmentationSystem(LeafSystem):
         )
         return cv2.erode(final_safety_score, erosion_kernel)
 
-    def inpaint(self, elevation_map: GridMap):
+    def inpaint(self, elevation_map: GridMap) -> None:
         raw_map = elevation_map["elevation"]
         mask = np.zeros_like(raw_map, dtype=np.uint8)
         mask[np.isnan(raw_map)] = 255
@@ -139,7 +148,7 @@ class TerrainSegmentationSystem(LeafSystem):
             elevation_map, "elevation_inpainted", "elevation_inpainted"
         )
 
-    def MakeDrivenByStandaloneSimulator(self, dt: float):
+    def MakeDrivenByStandaloneSimulator(self, dt: float) -> None:
         assert(dt > 0)
         self.DeclarePeriodicUnrestrictedUpdateEvent(
             dt, 0.0, self.UpdateTerrainSegmentation

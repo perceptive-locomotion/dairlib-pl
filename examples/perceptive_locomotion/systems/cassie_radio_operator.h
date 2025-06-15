@@ -49,6 +49,7 @@ class CassieRadioOperator : public drake::systems::LeafSystem<double> {
 
   drake::systems::InputPortIndex input_port_state_;
   drake::systems::InputPortIndex input_port_target_xy_;
+
   drake::systems::OutputPortIndex output_port_radio_;
   drake::systems::OutputPortIndex output_port_horizontal_velocity_;
 

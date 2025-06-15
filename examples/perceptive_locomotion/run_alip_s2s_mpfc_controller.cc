@@ -1,5 +1,3 @@
-#include <iostream>
-#include <signal.h>
 #include <gflags/gflags.h>
 
 #include "dairlib/lcmt_robot_output.hpp"
@@ -9,8 +7,6 @@
 #include "examples/Cassie/systems/cassie_out_to_radio.h"
 #include "multibody/multibody_utils.h"
 #include "multibody/stepping_stone_utils.h"
-#include "solvers/solver_options_io.h"
-#include "systems/filters/floating_base_velocity_filter.h"
 #include "systems/controllers/footstep_planning/alip_mpfc_s2s_system.h"
 #include "systems/controllers/footstep_planning/flat_terrain_foothold_source.h"
 #include "systems/primitives/fsm_lcm_systems.h"
@@ -129,7 +125,6 @@ int DoMain(int argc, char* argv[]) {
       FLAGS_mpfc_gains_filename, FLAGS_solver_options_filename,
       plant_w_spr, *context_w_spr
   );
-
 
   std::vector<ConvexPolygon> footholds;
   if ( !FLAGS_foothold_yaml.empty() ) {

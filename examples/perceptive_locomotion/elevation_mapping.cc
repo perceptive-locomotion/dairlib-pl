@@ -25,21 +25,21 @@ namespace dairlib {
 using Eigen::Vector3d;
 
 using systems::RobotOutputReceiver;
+using camera::ReadCameraPoseFromYaml;
+using perception::LcmToPclPointCloud;
 using perception::ElevationMappingSystem;
 using perception::elevation_mapping_params;
 using perception::elevation_mapping_params_io;
 using perception::PerceptiveLocomotionPreprocessor;
-using perception::LcmToPclPointCloud;
 using perception::perceptive_locomotion_preprocessor_params;
-using camera::ReadCameraPoseFromYaml;
 
+using drake::lcmt_point_cloud;
 using drake::systems::lcm::LcmSubscriberSystem;
 using drake::systems::ConstantVectorSource;
-using drake::lcmt_point_cloud;
 
 DEFINE_bool(visualize, true, "whether to add visualization");
 DEFINE_string(channel_x, "CASSIE_STATE_DISPATCHER", "state lcm channel");
-DEFINE_string(channel_point_cloud, "CASSIE_DEPTH", "pointcloud lcm channel");
+DEFINE_string(channel_point_cloud, "CASSIE_DEPTH", "point cloud lcm channel");
 DEFINE_string(camera_calib_yaml,
               "examples/perceptive_locomotion/camera_calib/cassie_hardware.yaml",
               "camera calibration yaml");
@@ -77,7 +77,6 @@ int DoMain(int argc, char *argv[]) {
                                            std::move(processor));
 
   auto state_receiver = builder.AddSystem<RobotOutputReceiver>(plant);
-
   auto pcl_subscriber = builder.AddSystem(
       LcmSubscriberSystem::Make<lcmt_point_cloud>(
           FLAGS_channel_point_cloud, &lcm_local

@@ -13,7 +13,6 @@ namespace pydairlib {
 
 PYBIND11_MODULE(polygon_utils, m) {
   m.doc() = "Binding geometry polygon simplification utils";
-
   m.def("ProcessTerrain2d",
         &geometry::ProcessTerrain2d,
         py::arg("terrain"),
@@ -22,8 +21,6 @@ PYBIND11_MODULE(polygon_utils, m) {
         &geometry::GetAcdComponents,
         py::arg("terrain"),
         py::arg("concavity_thresh"));
-
-
 }
 
 }

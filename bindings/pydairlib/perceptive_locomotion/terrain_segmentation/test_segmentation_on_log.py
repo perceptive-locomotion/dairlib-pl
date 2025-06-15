@@ -12,11 +12,11 @@ from matplotlib.animation import FuncAnimation
 from dairlib import lcmt_grid_map, lcmt_foothold_set, lcmt_robot_output
 
 from pydrake.systems.all import (
-    Diagram,
     Context,
+    Diagram,
+    TriggerType,
     DiagramBuilder,
     LcmPublisherSystem,
-    TriggerType,
 )
 from pydrake.all import DrakeLcm
 
@@ -28,12 +28,10 @@ from pydairlib.systems.perception import GridMapSender, PlaneSegmentationSystem
 
 from pydairlib.analysis.process_lcm_log import get_log_data
 
-from pydairlib.perceptive_locomotion.terrain_segmentation. \
-    terrain_segmentation_system import TerrainSegmentationSystem
-
-from pydairlib.perceptive_locomotion.terrain_segmentation. \
-    convex_terrain_decomposition_system import \
-    ConvexTerrainDecompositionSystem
+from pydairlib.perceptive_locomotion.terrain_segmentation import (
+    TerrainSegmentationSystem,
+    ConvexTerrainDecompositionSystem,
+)
 
 from pydairlib.geometry.convex_polygon import ConvexPolygonSender
 
@@ -72,23 +70,17 @@ def process_grid_maps(data_dict):
     return grid_maps, robot_output_msgs
 
 
-def build_diagram(mode: str, lcm: DrakeLcm, profiling=None) -> Diagram:
+def build_diagram(lcm: DrakeLcm, profiling=None) -> Diagram:
 
     builder = DiagramBuilder()
 
-    terrain_segmentation = PlaneSegmentationSystem(
-        'systems/perception/ethz_plane_segmentation/params.yaml'
-    ) \
-        if mode == 'planar' else TerrainSegmentationSystem(
+    terrain_segmentation = TerrainSegmentationSystem(
         {
             'curvature_criterion': seg_criteria.curvature_criterion,
             'inclination_criterion': seg_criteria.inclination_criterion
         },
         profiling
     )
-
-    if mode != 'planar':
-        terrain_segmentation.safety_hysteresis = 0.4
     convex_decomposition = ConvexTerrainDecompositionSystem(profiling)
     foothold_sender = ConvexPolygonSender()
 
@@ -245,19 +237,6 @@ def run_segmentation_profiling(logfile):
         profile_segmentation(plane_segmentation, deepcopy(grid_maps)),
         profile_segmentation(s3, deepcopy(grid_maps))
     ]
-
-    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
-    font = {'size': 15, 'family': 'serif'}
-    matplotlib.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
-    matplotlib.rc('text.latex', preamble=r'\usepackage{underscore}')
-    matplotlib.rc('text', usetex=True)
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 1
-    matplotlib.rcParams['axes.titlesize'] = 20
-    matplotlib.rcParams['xtick.major.size'] = 15
-    matplotlib.rcParams['xtick.major.width'] = 1
-    matplotlib.rcParams['xtick.minor.size'] = 7
-    matplotlib.rcParams['xtick.minor.width'] = 1
 
     fig = plt.figure()
     plt.title(f'Run Time')

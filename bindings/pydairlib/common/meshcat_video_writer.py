@@ -3,24 +3,37 @@ import tempfile
 import subprocess
 from time import sleep
 
+from lcm import EventLog
+
+from pydrake.all import Meshcat
 from pydrake.systems.all import Diagram, Simulator
 from pydairlib.lcm.log_playback import LcmLogPlayback
 from pydairlib.common.meshcat_chrome_capture import MeshcatChromeCapture
 
 
-def write_meshcat_video_from_log(diagram, lcm_log, meshcat, channel_to_type_map,
-                                 channel_to_port_map, video_out_path,
+def write_meshcat_video_from_log(diagram: Diagram,
+                                 lcm_log: EventLog,
+                                 meshcat: Meshcat,
+                                 channel_to_type_map: dict,
+                                 channel_to_port_map: dict,
+                                 video_out_path: str,
                                  start: float = 0.0,
                                  duration: float = -1.0,
                                  window_size=(1440, 1080)):
     capture = MeshcatChromeCapture(meshcat, window_size=window_size)
 
     # wait for plant to load
-    sleep(5)
-    playback = LcmLogPlayback(
-        lcm_log, diagram, channel_to_type_map, channel_to_port_map, start_time=start)
+    sleep(3)
 
-    dt = 1.0/30.0
+    playback = LcmLogPlayback(
+        lcm_log,
+        diagram,
+        channel_to_type_map,
+        channel_to_port_map,
+        start_time=start
+    )
+
+    dt = 1.0 / 30.0
     t = dt
     frame = 0
     with tempfile.TemporaryDirectory() as temp_dir:

@@ -28,15 +28,6 @@ py_binary(
 )
 
 py_binary(
-    name = "terrain_segmentation_test",
-    srcs = ["terrain_segmentation_test.py"],
-    deps = [
-        ":convex_terrain_decomposition_system",
-        ":terrain_segmentation_system",
-    ],
-)
-
-py_binary(
     name = "elevation_mapping_and_terrain_decomposition",
     srcs = ["elevation_mapping_and_terrain_decomposition.py"],
     data = ["@lcm//:lcm-python"],

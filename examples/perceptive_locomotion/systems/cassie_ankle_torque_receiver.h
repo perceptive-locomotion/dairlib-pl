@@ -13,9 +13,10 @@ namespace dairlib::perceptive_locomotion {
 class CassieAnkleTorqueReceiver : public drake::systems::LeafSystem<double> {
  public:
   DRAKE_NO_COPY_NO_MOVE_NO_ASSIGN(CassieAnkleTorqueReceiver);
-  CassieAnkleTorqueReceiver(const drake::multibody::MultibodyPlant<double>& plant,
-                            std::vector<int> left_right_fsm_states,
-                            std::vector<std::string> left_right_ankle_motor_names);
+  CassieAnkleTorqueReceiver(
+      const drake::multibody::MultibodyPlant<double>& plant,
+      std::vector<int> left_right_fsm_states,
+      std::vector<std::string> left_right_ankle_motor_names);
 
   const drake::systems::InputPort<double>& get_input_port_fsm() {
     return this->get_input_port(fsm_input_port_);

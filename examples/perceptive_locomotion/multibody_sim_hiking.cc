@@ -1,7 +1,3 @@
-#include <memory>
-#include <signal.h>
-
-#include <drake/systems/primitives/multiplexer.h>
 #include <gflags/gflags.h>
 
 #include "dairlib/lcmt_cassie_out.hpp"
@@ -13,24 +9,20 @@
 #include "examples/Cassie/cassie_utils.h"
 #include "multibody/multibody_utils.h"
 #include "multibody/stepping_stone_utils.h"
-#include "systems/system_utils.h"
 #include "systems/robot_lcm_systems.h"
 #include "systems/perception/camera_utils.h"
 #include "systems/perception/pointcloud/voxel_grid_filter.h"
-#include "systems/framework/geared_motor.h"
 #include "systems/primitives/subvector_pass_through.h"
 #include "systems/perception/ideal_landmark_source.h"
 
 #include "drake/lcm/drake_lcm.h"
 #include "drake/multibody/plant/contact_results_to_lcm.h"
-#include "drake/systems/analysis/runge_kutta2_integrator.h"
 #include "drake/systems/analysis/simulator.h"
 #include "drake/systems/framework/diagram_builder.h"
 #include "drake/systems/lcm/lcm_interface_system.h"
 #include "drake/systems/lcm/lcm_publisher_system.h"
 #include "drake/systems/lcm/lcm_subscriber_system.h"
 #include "drake/systems/primitives/discrete_time_delay.h"
-#include "drake/systems/primitives/constant_vector_source.h"
 #include "drake/systems/sensors/rgbd_sensor.h"
 #include "drake/perception/depth_image_to_point_cloud.h"
 #include "drake/perception/point_cloud_to_lcm.h"
@@ -270,8 +262,8 @@ int do_main(int argc, char* argv[]) {
 
   // Set initial conditions of the simulation
   VectorXd q_init, u_init, lambda_init;
-  double mu_fp = 0;
-  double min_normal_fp = 70;
+  const double mu_fp = 0;
+  const double min_normal_fp = 70;
   double toe_spread = FLAGS_toe_spread;
   // Create a plant for CassieFixedPointSolver.
   // Note that we cannot use the plant from the above diagram, because after the

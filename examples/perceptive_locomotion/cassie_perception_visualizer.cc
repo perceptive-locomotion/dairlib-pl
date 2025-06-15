@@ -46,7 +46,6 @@ int do_main(int argc, char* argv[]) {
 
   std::string track_frame = FLAGS_track_pelvis ? "pelvis" : "";
   auto plant_visualizer = builder.AddSystem<PlantVisualizer>(urdf, track_frame);
-
   auto lcm = builder.AddSystem<drake::systems::lcm::LcmInterfaceSystem>(
       "udpm://239.255.76.67:7667?ttl=0");
 
@@ -90,7 +89,6 @@ int do_main(int argc, char* argv[]) {
     builder.Connect(*receivers.at(key), *visualizers.at(key));
   }
 
-
   auto diagram = builder.Build();
   auto context = diagram->CreateDefaultContext();
 
@@ -101,15 +99,14 @@ int do_main(int argc, char* argv[]) {
   auto& state_sub_context = diagram->GetMutableSubsystemContext(
       *subscribers.at("state"), context.get()
   );
-  dynamic_cast<RobotOutputReceiver*>(receivers.at("state"))->InitializeSubscriberPositions(
+  dynamic_cast<RobotOutputReceiver*>(
+      receivers.at("state"))->InitializeSubscriberPositions(
       plant_visualizer->get_plant(), state_sub_context
   );
 
   /// Use the simulator to drive at a fixed rate
-  /// If set_publish_every_time_step is true, this publishes twice
-  /// Set realtime rate. Otherwise, runs as fast as possible
-  auto stepper =
-  std::make_unique<Simulator<double>>(*diagram, std::move(context));
+  auto stepper = std::make_unique<Simulator<double>>(
+      *diagram, std::move(context));
   stepper->set_publish_every_time_step(false);
   stepper->set_publish_at_initialization(false);
   stepper->set_target_realtime_rate(1.0);

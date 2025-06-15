@@ -123,7 +123,7 @@ Eigen::Vector3d SwingFootTrajSolver::CalcDesiredMidpoint(
 
   // bias toward the normal being straight up for short footsteps to avoid
   // weird scaling issues
-  double blend = pos_T.norm() - 0.1 / 0.1;
+  double blend = (pos_T.norm() - 0.1) / 0.1;
   blend = std::clamp(blend, 0.0, 1.0);
   n = blend * n + (1.0 - blend) * Vector3d::UnitZ();
   n.normalize();

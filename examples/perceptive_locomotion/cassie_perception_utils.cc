@@ -5,6 +5,7 @@ namespace dairlib {
 namespace perceptive_locomotion {
 
 using Eigen::Vector3d;
+using elevation_mapping::SensorProcessorBase;
 
 namespace {
 perception::perceptive_locomotion_preprocessor_params get_defaults() {
@@ -37,19 +38,16 @@ MakeCassieElevationMappingPreProcessor(
 
   return std::make_shared<perception::PerceptiveLocomotionPreprocessor>(
       plant, plant_context, processor_params,
-      elevation_mapping::SensorProcessorBase::GeneralParameters{"pelvis", "world"}
-  );
+      SensorProcessorBase::GeneralParameters{"pelvis", "world"});
 }
 
 std::shared_ptr<perception::PerceptiveLocomotionPreprocessor>
 MakeCassieElevationMappingPreProcessorForCropBoxTest(
     const drake::multibody::MultibodyPlant<double>& plant,
     drake::systems::Context<double>* plant_context) {
-
   return std::make_shared<perception::PerceptiveLocomotionPreprocessor>(
       plant, plant_context, get_defaults(),
-      elevation_mapping::SensorProcessorBase::GeneralParameters{"pelvis", "world"}
-  );
+      SensorProcessorBase::GeneralParameters{"pelvis", "world"});
 }
 
 }

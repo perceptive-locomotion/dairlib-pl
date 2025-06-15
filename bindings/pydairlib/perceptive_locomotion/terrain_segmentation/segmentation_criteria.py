@@ -9,7 +9,8 @@ import pydairlib.perceptive_locomotion.terrain_segmentation.segmentation_utils a
 
 
 def curvature_criterion(
-        denoised_and_inpainted_map: np.ndarray, ksize: Tuple[int, int],
+        denoised_and_inpainted_map: np.ndarray,
+        ksize: Tuple[int, int],
         resolution: float) -> np.ndarray:
 
     # User specified parameters:
@@ -30,7 +31,8 @@ def curvature_criterion(
 
 
 def inclination_criterion(
-        denoised_and_inpainted_map: np.ndarray, ksize: Tuple[int, int],
+        denoised_and_inpainted_map: np.ndarray,
+        ksize: Tuple[int, int],
         resolution: float) -> np.ndarray:
 
     inclination, _ = utils.CalculateNormalsAndSquaredError(

@@ -16,26 +16,6 @@ from pydrake.systems.all import (
 from pydairlib.geometry.convex_polygon import ConvexPolygon, ConvexPolygonSet
 from pydairlib.geometry.polygon_utils import ProcessTerrain2d, GetAcdComponents
 
-import matplotlib.pyplot as plt
-
-
-def plot_polygon(verts, linestyle='solid', color='black'):
-    # plot a polygon (for debugging)
-    assert(verts.shape[0] == 2)
-    tmp = np.vstack((verts.T, verts[:, 0]))
-    plt.plot(-tmp[:, 1], tmp[:, 0], linestyle=linestyle, linewidth=2.5, color=color)
-
-
-def plot_polygon_with_holes(poly):
-    plot_polygon(poly[0], linestyle='solid', color='black')
-    for p in poly[1]:
-        plot_polygon(p, linestyle='solid', color='black')
-
-
-def plot_polygons_with_holes(polys):
-    for p in polys:
-        plot_polygon_with_holes(p)
-
 
 def remove_collinear(boundary):
     len = boundary.shape[0]

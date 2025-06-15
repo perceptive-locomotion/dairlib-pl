@@ -64,11 +64,12 @@ class MeshcatChromeCapture:
             }
         """)
 
-        # remove the controls GUI
-        # The control panel is made with Dat.GUI (https://sbcode.net/threejs/dat-gui/),
-        # so I asked an LLM for a script to hide Dat.GUI elements
+        # remove the meshcat controls GUI
+        # The control panel is made with Dat.GUI
+        # (https://sbcode.net/threejs/dat-gui/),
+        # so I asked an LLM for a JS script to hide Dat.GUI elements
         #
-        # Maybe need updated for future meshcat versions
+        # May need to be updated for future meshcat versions
         self._driver.execute_script("""
             var datGuis = document.getElementsByClassName('dg main');
             while(datGuis.length > 0) {
@@ -95,7 +96,7 @@ class MeshcatChromeCapture:
             print(f'saved page to {save_file_name}')
 
     def look_at(self, point_of_interest, cam_pos_local):
-        # point the camera at the poit of interest
+        # point the camera at the point of interest
         self._meshcat.SetCameraPose(
             point_of_interest + cam_pos_local, point_of_interest)
 
