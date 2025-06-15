@@ -9,7 +9,6 @@
 #include "systems/controllers/footstep_planning/alip_s2s_mpfc_params.h"
 #include "systems/controllers/footstep_planning/alip_mpc_output_reciever.h"
 #include "systems/controllers/footstep_planning/alip_mpc_interface_system.h"
-#include "systems/controllers/footstep_planning/alip_state_calculator_system.h"
 
 // misc
 #include "systems/robot_lcm_systems.h"
@@ -54,7 +53,6 @@ using systems::controllers::JointSpaceTrackingData;
 using systems::controllers::RelativeTranslationTrackingData;
 using systems::controllers::RotTaskSpaceTrackingData;
 using systems::controllers::TransTaskSpaceTrackingData;
-using systems::controllers::alip_utils::AlipStateCalculator;
 
 using multibody::FixedJointEvaluator;
 using multibody::WorldPointEvaluator;
@@ -197,18 +195,6 @@ MpfcOscDiagram::MpfcOscDiagram(
   vector<systems::controllers::alip_utils::PointOnFramed> left_right_contacts(
       {left_toe_mid, right_toe_mid}
   );
-  auto alip_calc = builder.AddSystem<AlipStateCalculator>(
-      plant,
-      plant_context.get(),
-      left_right_support_fsm_states,
-      post_left_post_right_ds_states,
-      left_right_contacts,
-      "pelvis"
-  );
-  builder.Connect(state_receiver->get_output_port(),
-                  alip_calc->get_input_port_state());
-  builder.Connect(fsm->get_output_port_fsm(),
-                  alip_calc->get_input_port_fsm());
 
   auto mpc_interface = builder.AddSystem<AlipMPCInterfaceSystem>(
       plant, plant_context.get(), com_params, swing_params);
@@ -477,9 +463,6 @@ MpfcOscDiagram::MpfcOscDiagram(
   );
   output_port_fsm_ = builder.ExportOutput(
       fsm->get_output_port_fsm(), "fsm"
-  );
-  output_port_alip_ = builder.ExportOutput(
-      alip_calc->get_output_port(), "alip"
   );
   output_port_switching_time_ = builder.ExportOutput(
       fsm->get_output_port_time_until_switch(), "time_until_switch"

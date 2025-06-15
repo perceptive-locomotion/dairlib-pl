@@ -98,9 +98,6 @@ class MpfcOscDiagram : public drake::systems::Diagram<double> {
   [[nodiscard]] const OutputPort<double>& get_output_port_fsm() const {
     return get_output_port(output_port_fsm_);
   }
-  [[nodiscard]] const OutputPort<double>& get_output_port_alip() const {
-    return get_output_port(output_port_alip_);
-  }
   [[nodiscard]] const OutputPort<double>& get_output_port_switching_time()
   const {
     return get_output_port(output_port_switching_time_);
@@ -192,7 +189,6 @@ class MpfcOscDiagram : public drake::systems::Diagram<double> {
   std::unique_ptr<JointSpaceTrackingData> swing_toe_data_right;
 
   drake::systems::InputPortIndex input_port_state_;
-  drake::systems::InputPortIndex input_port_footstep_command_;
   drake::systems::InputPortIndex input_port_alip_mpc_output_;
   drake::systems::InputPortIndex input_port_radio_;
 
@@ -201,7 +197,6 @@ class MpfcOscDiagram : public drake::systems::Diagram<double> {
   drake::systems::OutputPortIndex output_port_osc_debug_;
   drake::systems::OutputPortIndex output_port_fsm_;
   drake::systems::OutputPortIndex output_port_switching_time_;
-  drake::systems::OutputPortIndex output_port_alip_;
 };
 
 }
