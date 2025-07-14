@@ -20,7 +20,6 @@ from pydairlib.perceptive_locomotion.terrain_segmentation. \
 
 from pydairlib.perceptive_locomotion import ConvexTerrainDecompositionSystem
 
-from pydairlib.systems import DrawAndSaveDiagramGraph
 from pydairlib.systems.framework import OutputVector
 
 import pydairlib.perceptive_locomotion.terrain_segmentation. \

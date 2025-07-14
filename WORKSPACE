@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 # vi: set ft=python :
 
-workspace(name = "dairlib")
+workspace(name = "dairlib-pl")
 
 # dairlib can use either a local version of drake or a pegged revision
 # If the environment variable DAIRLIB_LOCAL_DRAKE_PATH is set, it will use
@@ -65,11 +65,11 @@ load("@drake//tools/workspace:default.bzl", "add_default_workspace")
 
 add_default_workspace()
 
-load("@dairlib//tools/workspace/osqp:repository.bzl", "osqp_repository")
+load("@dairlib-pl//tools/workspace/osqp:repository.bzl", "osqp_repository")
 
 osqp_repository(name = "osqp")
 
-load("@dairlib//tools/workspace/fcc_qp:repository.bzl", "fcc_qp_repository")
+load("@dairlib-pl//tools/workspace/fcc_qp:repository.bzl", "fcc_qp_repository")
 
 fcc_qp_repository(name = "fcc_qp")
 

@@ -1,16 +1,13 @@
-from scipy.ndimage import (sobel, gaussian_filter, gaussian_laplace,
-                           gaussian_gradient_magnitude)
 import numpy as np
-import cv2
+from scipy.ndimage import gaussian_laplace
 
-from typing import Tuple
-
-import pydairlib.perceptive_locomotion.terrain_segmentation.segmentation_utils as utils
+import pydairlib.perceptive_locomotion.terrain_segmentation.segmentation_utils \
+    as utils
 
 
 def curvature_criterion(
         denoised_and_inpainted_map: np.ndarray,
-        ksize: Tuple[int, int],
+        ksize: tuple[int, int],
         resolution: float) -> np.ndarray:
 
     # User specified parameters:
@@ -32,7 +29,7 @@ def curvature_criterion(
 
 def inclination_criterion(
         denoised_and_inpainted_map: np.ndarray,
-        ksize: Tuple[int, int],
+        ksize: tuple[int, int],
         resolution: float) -> np.ndarray:
 
     inclination, _ = utils.CalculateNormalsAndSquaredError(

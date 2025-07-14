@@ -1,18 +1,25 @@
 import sys
 import signal
 
-from dairlib import lcmt_robot_output, lcmt_foothold_set, lcmt_grid_map, \
-    lcmt_contact, lcmt_profiling
+from dairlib import (
+    lcmt_robot_output,
+    lcmt_foothold_set,
+    lcmt_grid_map,
+    lcmt_contact,
+    lcmt_profiling,
+)
 
 from pydrake.systems.all import (
-    Diagram,
     Context,
+    Diagram,
+    TriggerType,
     DiagramBuilder,
     LcmPublisherSystem,
     LcmSubscriberSystem,
-    TriggerType,
 )
 
+# needed for systems framework (ideally bindings would
+# import these but as a bandaid do it here)
 from pydrake.lcm import DrakeLcm
 from pydrake.common.value import AbstractValue
 
@@ -24,14 +31,11 @@ from pydairlib.perceptive_locomotion.diagrams import (
     CassieRealSenseDriverDiagram
 )
 
-from pydairlib.perceptive_locomotion.terrain_segmentation. \
-    terrain_segmentation_system import TerrainSegmentationSystem
-
-from pydairlib.perceptive_locomotion.terrain_segmentation. \
-    convex_terrain_decomposition_system import \
+from pydairlib.perceptive_locomotion.terrain_segmentation import (
+    TerrainSegmentationSystem,
     ConvexTerrainDecompositionSystem
+)
 
-from pydairlib.systems.system_utils import DrawAndSaveDiagramGraph
 from pydairlib.systems.framework import LcmOutputDrivenLoop, OutputVector
 from pydairlib.systems.perception import GridMapSender
 
@@ -153,10 +157,6 @@ def main():
         elevation_map_publisher_local.get_input_port()
     )
     diagram = builder.Build()
-    DrawAndSaveDiagramGraph(
-        diagram,
-        '../elevation_mapping_and_convex_decomposition'
-    )
     driven_loop = LcmOutputDrivenLoop(
         drake_lcm=elevation_mapping.lcm(),
         diagram=diagram,

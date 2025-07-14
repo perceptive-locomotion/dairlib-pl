@@ -103,6 +103,8 @@ class ConvexTerrainDecompositionSystem(LeafSystem):
 
     def get_plane(self, elevation_map: GridMap, polygon: ConvexPolygon):
         verts3d = None
+        plane = None
+
         try:
             verts3d = polygon.GetVertices().squeeze().transpose()
         except RuntimeError:
@@ -113,7 +115,7 @@ class ConvexTerrainDecompositionSystem(LeafSystem):
             v[-1] = elevation_map.atPosition(
                 "elevation_inpainted", v[:2], InterpolationMethods.INTER_CUBIC
             )
-        plane = None
+
         try:
             plane = Plane.best_fit(verts3d)
         except ValueError:

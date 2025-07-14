@@ -1,16 +1,15 @@
 import os
 import lcm
 import time
-import tempfile
-import subprocess
 import matplotlib
 import numpy as np
-from PIL import Image
+import matplotlib.animation
+
 from typing import List
 from copy import deepcopy
-import matplotlib.animation
-from grid_map import GridMap
 from matplotlib import pyplot as plt, patches
+
+from grid_map import GridMap
 
 # lcmtypes
 from dairlib import(

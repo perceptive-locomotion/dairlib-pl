@@ -367,47 +367,21 @@ def timing_study_main(fname):
     )
 
 
-def perception_study_main(fname):
-    n_trials = 50
-    gains = "bindings/pydairlib/perceptive_locomotion/sim_experiments/gains/mpfc_gains_default.yaml"
-
-    results = {}
-
-    study_params = TrialParams(
-        gains=gains,
-        terrain="",
-        sim_params="",
-        perceptive=True,
-        terrain_size=0,
-    )
-    for margin in [0.15, 0.12, 0.09, 0.06]:
-        results[margin] = {}
-        study_params.safety_margin = margin
-        for terrain_size in [0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3]:
-            try:
-                study_params.terrain_size = terrain_size
-                results[margin][terrain_size] = run_study_parallel(study_params, n_trials)
-            except KeyboardInterrupt:
-                print("\nStudy terminated by user.")
-
-    np.savez(fname, results=results)
-
-
 def plot_timing_results(folder):
     fname = os.path.join(folder, 'timing_adaptation_results.npz')
     data = np.load(fname, allow_pickle=True)
     conditions = {
         "results_gt": "Opt-T",
         "results_gt_no_timing": "Fixed-T",
-        # "results_perceptive": "Opt-T (Perceptive)",
-        # "results_perceptive_no_timing": "Fixed-T (Perceptive)"
+        "results_perceptive": "Opt-T (Perceptive)",
+        "results_perceptive_no_timing": "Fixed-T (Perceptive)"
     }
 
     markers = {
         "results_gt": "*",
         "results_gt_no_timing": "x",
-        # "results_perceptive": "^",
-        # "results_perceptive_no_timing": "o"
+        "results_perceptive": "^",
+        "results_perceptive_no_timing": "o"
     }
     
     setup_plots()
@@ -432,88 +406,22 @@ def plot_timing_results(folder):
     subprocess.run(['inkscape', '--export-type=svg', '--export-id=axes_1', savefile, '-o', savefile])
 
 
-def plot_margin_results(folder):
-    fname = os.path.join(folder, 'margin_adaptation_results.npz')
-    data = np.load(fname, allow_pickle=True)
-    results = data['results'].item()
-    margins = [*results]
-    margins.sort()
-
-    markers = {
-        0.06: "*",
-        0.09: "x",
-        0.12: "^",
-        0.15: "o"
-    }
-    
-    plt.figure(figsize=(18, 10))
-    for margin in margins:
-        label = f'{margin:.2f} m'
-        sizes = [*results[margin]]
-        sizes.sort()
-
-        success_rates = []
-        for size in sizes:
-            trial_data = results[margin][size]
-            success_rate = 100 * float(trial_data['success']) / float(trial_data['success'] + trial_data['fail'])
-            success_rates.append(success_rate)
-        plt.plot(sizes, success_rates, label=label, marker=markers[margin])
-        plt.title('Stepping Stone Success vs. S3 Safety Margin')
-        plt.xlabel('Minimum Stepping Stone Side Length, $d_{min}$ (m)')
-        plt.ylabel('Success Rate (\\%)')
-        plt.legend()
-
-
-def logsaver_main():
-    n_trials = 20
-    gains = "bindings/pydairlib/perceptive_locomotion/sim_experiments/gains/mpfc_gains_default.yaml"
-    gains_no_timing = "bindings/pydairlib/perceptive_locomotion/sim_experiments/gains/mpfc_gains_no_timing_adaptation.yaml"
-
-    results_gt = {}
-    results_gt_no_timing = {}
-    results_perceptive = {}
-    results_perceptive_no_timing = {}
-
-    for terrain_size in [0.35, 0.4]:
-        study_params = TrialParams(
-            gains="",
-            terrain="",
-            sim_params="",
-            perceptive=False,
-            terrain_size=terrain_size,
-            safety_margin=0.10
-        )
-        try:
-            study_params.gains = gains
-            results_gt[terrain_size] = run_study_parallel(study_params, n_trials)
-
-            study_params.gains = gains_no_timing
-            results_gt_no_timing[terrain_size] = run_study_parallel(study_params, n_trials)
-
-            study_params.perceptive = True
-            results_perceptive_no_timing[terrain_size] = run_study_parallel(study_params, n_trials)
-
-            study_params.gains = gains
-            results_perceptive[terrain_size] = run_study_parallel(study_params, n_trials)
-        except KeyboardInterrupt:
-            print("\nStudy terminated by user.")
-
-
 if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument(
         "--saved_results_folder",
         type=str,
-        help='Filename of study results that have already been saved for plotting. Leave empy to run the study',
+        help='Filename of study results that have already been saved for '
+             'plotting. Leave empy to run the study',
         default=None
     )
     args = parser.parse_args()
     if args.saved_results_folder:
         plot_timing_results(args.saved_results_folder)
         plt.figure()
-        # plot_margin_results(args.saved_results_folder)
         plt.show()
     else:
-        timing_study_main('../stepping_stone_study_results/timing_adaptation_results.npz')
-        # perception_study_main('../stepping_stone_study_results/margin_adaptation_results.npz')
+        timing_study_main(
+            '../stepping_stone_study_results/timing_adaptation_results.npz'
+        )

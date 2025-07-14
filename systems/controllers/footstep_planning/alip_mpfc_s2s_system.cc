@@ -34,7 +34,6 @@ using drake::systems::State;
 
 using grid_map::GridMap;
 
-
 Alips2sMPFCSystem::Alips2sMPFCSystem(
     const MultibodyPlant<double>& plant, Context<double>* plant_context,
     std::vector<int> left_right_stance_fsm_states,
@@ -330,7 +329,6 @@ void Alips2sMPFCSystem::CopyMpcOutput(
       mpc_output->next_footstep_in_stance_frame[2] = height;
     }
   }
-
 
   // copy fsm info
   mpc_output->fsm.fsm_state = GetFsmForOutput(context);

@@ -1,3 +1,9 @@
+import cv2
+import time
+import numpy as np
+
+from grid_map import GridMap, InpaintWithMinimumValues
+
 from pydrake.systems.all import (
     Value,
     State,
@@ -5,13 +11,6 @@ from pydrake.systems.all import (
     LeafSystem,
     EventStatus
 )
-
-from grid_map import GridMap, InpaintWithMinimumValues
-import numpy as np
-import cv2
-import time
-
-from typing import Tuple
 
 
 def initialize_from_input_map(init_map: GridMap, input_map: GridMap) -> None:
@@ -24,7 +23,7 @@ def initialize_from_input_map(init_map: GridMap, input_map: GridMap) -> None:
     init_map["segmentation"][:] = np.ones(init_map.getSize())
 
 
-def clopen(img: np.ndarray):
+def clopen(img: np.ndarray) -> np.ndarray:
     kernel = np.ones((3, 3), np.uint8)
     img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
     img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
@@ -82,7 +81,7 @@ class TerrainSegmentationSystem(LeafSystem):
         kernel = self.get_kernel_size(resolution)
 
         i = 0
-        # calculate and compose all of the safety criteria
+        # calculate and compose the safety criteria
         for name, callback in self.safety_criterion_callbacks.items():
             start = time.time()
             raw_safety = raw_safety * callback(
@@ -110,7 +109,7 @@ class TerrainSegmentationSystem(LeafSystem):
 
         return raw_safety
 
-    def get_kernel_size(self, resolution: float, length=None) -> Tuple[int, int]:
+    def get_kernel_size(self, resolution: float, length=None) -> tuple[int, int]:
         length = self.kernel_length if length is None else length
         ksize_int = int(length / resolution + 0.5)
         return ksize_int, ksize_int
@@ -135,6 +134,7 @@ class TerrainSegmentationSystem(LeafSystem):
         raw_map = elevation_map["elevation"]
         mask = np.zeros_like(raw_map, dtype=np.uint8)
         mask[np.isnan(raw_map)] = 255
+
         if not elevation_map.exists("elevation_inpainted"):
             elevation_map.add("elevation_inpainted")
             
