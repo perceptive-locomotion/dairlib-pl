@@ -4,7 +4,6 @@
 
 #include "examples/Cassie/cassie_utils.h"
 #include "systems/robot_lcm_systems.h"
-#include "systems/system_utils.h"
 
 #include "drake/systems/framework/diagram_builder.h"
 #include "drake/systems/primitives/constant_vector_source.h"
@@ -96,8 +95,7 @@ CassieRealSenseDriverDiagram::CassieRealSenseDriverDiagram(const std::string& pa
       "lcmt_profiling"
   );
   builder.BuildInto(this);
-  this->set_name("elevation_mapping_ros_diagram");
-  DrawAndSaveDiagramGraph(*this);
+  this->set_name("elevation_mapping_realsense_diagram");
 }
 
 void CassieRealSenseDriverDiagram::InitializeElevationMap(
