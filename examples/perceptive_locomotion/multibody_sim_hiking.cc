@@ -61,12 +61,10 @@ using perception::IdealLandmarkSource;
 DEFINE_bool(floating_base, true, "Fixed or floating base model");
 DEFINE_bool(publish_efforts, true, "Flag to publish the efforts.");
 DEFINE_bool(spring_model, true, "Use a URDF with or without legs springs");
-DEFINE_bool(publish_ros_pose, false, "if true, publishes the pelvis tf");
-DEFINE_bool(publish_points, true, "publish ros pointcloud messages");
+DEFINE_bool(publish_points, true, "publish lcm pointcloud messages");
 
 DEFINE_double(publish_rate, 1000, "Publish rate for simulator");
 DEFINE_double(toe_spread, .05, "Initial toe spread in m.");
-DEFINE_double(ros_state_pub_period, 0.01, "tf and pose publish period");
 DEFINE_double(points_pub_period, 1.0/30.0, "pointcloud publish period");
 DEFINE_double(dt, 5e-4,
               "The step size to use for time_stepping, ignored for continuous");

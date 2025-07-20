@@ -67,7 +67,6 @@ int do_main(int argc, char* argv[]) {
                     foothold_vis->get_input_port_terrain());
   }
 
-
   auto diagram = builder.Build();
   auto context = diagram->CreateDefaultContext();
 

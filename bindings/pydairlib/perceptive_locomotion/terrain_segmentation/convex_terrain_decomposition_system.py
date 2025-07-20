@@ -17,7 +17,7 @@ from pydairlib.geometry.convex_polygon import ConvexPolygon, ConvexPolygonSet
 from pydairlib.geometry.polygon_utils import ProcessTerrain2d, GetAcdComponents
 
 
-def remove_collinear(boundary):
+def _remove_collinear(boundary: np.ndarray) -> np.ndarray:
     len = boundary.shape[0]
     keep_idx = []
     for i in range(len):
@@ -33,7 +33,10 @@ def remove_collinear(boundary):
     return boundary[keep_idx, :]
 
 
-def get_polygons_by_contour_extraction(mask: np.ndarray, grid: GridMap):
+def _get_polygons_by_contour_extraction(
+        mask: np.ndarray, grid: GridMap
+) -> list[tuple[np.ndarray, list[np.ndarray]]]:
+
     safe_regions, hierarchy = cv2.findContours(
         mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
     )
@@ -50,6 +53,7 @@ def get_polygons_by_contour_extraction(mask: np.ndarray, grid: GridMap):
 
     polygons = []
     for i, boundary in enumerate(safe_regions):
+        # correct the winding
         boundary = np.fliplr(boundary.squeeze())
         boundary = remove_collinear(boundary)
         if is_outer_contour(hierarchy[i]):
@@ -63,6 +67,7 @@ def get_polygons_by_contour_extraction(mask: np.ndarray, grid: GridMap):
             child_index = hierarchy[i][2]
 
             while child_index > 0:
+                # flip winding of hole points
                 hole_boundary = np.fliplr(safe_regions[child_index].squeeze())
                 hole_boundary = remove_collinear(hole_boundary)
                 hole_points = np.zeros_like(
@@ -134,7 +139,7 @@ class ConvexTerrainDecompositionSystem(LeafSystem):
     def calc_convex_polygons(self, grid: GridMap):
         safe_terrain_image = (255 * grid['segmentation']).astype(np.uint8)
         
-        polygons = get_polygons_by_contour_extraction(
+        polygons = _get_polygons_by_contour_extraction(
             safe_terrain_image, grid
         )
         
@@ -152,7 +157,7 @@ class ConvexTerrainDecompositionSystem(LeafSystem):
         
         safe_terrain_image = (255 * grid['segmentation']).astype(np.uint8)
     
-        polygons = get_polygons_by_contour_extraction(
+        polygons = _get_polygons_by_contour_extraction(
             safe_terrain_image, grid
         )
         

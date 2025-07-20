@@ -6,20 +6,12 @@ group "0.operator" {
 }
 
 group "1.cassie-robot" {
-    cmd "0.dispatcher-robot-out" {
-        exec = "bazel-bin/examples/Cassie/dispatcher_robot_out --port 25001 --floating_base --simulation";
-        host = "localhost";
-    }
     cmd "1.dispatcher-robot-in" {
         exec = "bazel-bin/examples/Cassie/dispatcher_robot_in --control_channel_name_initial=OSC_STANDING --port 25000 --sim";
         host = "localhost";
     }
     cmd "3.standing-controller" {
         exec = "bazel-bin/examples/Cassie/run_osc_standing_controller --height=0.95 --channel_x=CASSIE_STATE_SIMULATION --channel_u=OSC_STANDING";
-        host = "localhost";
-    }
-    cmd "4.alip-baseline-controller" {
-        exec = "bazel-bin/examples/Cassie/run_osc_walking_controller_alip --use_radio --channel_x=CASSIE_STATE_SIMULATION --channel_u=OSC_WALKING";
         host = "localhost";
     }
     cmd "5.0alip-mpfc" {
@@ -66,7 +58,6 @@ script "initialize_standing" {
     stop group "1.cassie-robot";
     stop cmd "0.cassie-lcm-logger";
     stop group "2.drake-simulator" wait "stopped";
-    start cmd "0.dispatcher-robot-out";
     start cmd "1.dispatcher-robot-in";
     start cmd "3.standing-controller";
 }
